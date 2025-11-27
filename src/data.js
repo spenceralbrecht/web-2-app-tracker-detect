@@ -6,11 +6,12 @@ export const steps = [
     headlineText: 'See Who\'s Tracking You',
     subheadlineText: 'Find devices around you',
     images: [
-      '/onboarding_carousel_1.webp',
-      '/onboarding_carousel_2.webp',
-      '/onboarding_carousel_3.webp',
+      '/onboarding_carousel_5.webp',
       '/onboarding_carousel_4.webp',
-      '/onboarding_carousel_5.webp'
+      '/onboarding_carousel_3.webp',
+      '/onboarding_carousel_2.webp',
+      '/onboarding_carousel_1.webp',
+
     ],
     buttonText: 'Get Started',
     timeEstimate: 'Takes less than 30 seconds'
@@ -100,9 +101,16 @@ export const steps = [
     bottomInfo: '+400% Increase',
     stat1Number: '2.5M',
     stat1Label: 'Victims',
-    stat2Number: '85%',
     stat2Label: 'Unaware',
     buttonText: 'See My Risk'
+  },
+  {
+    id: 'final_step',
+    type: 'final',
+    title: 'We have tailored your app experience',
+    subtitle: 'Your personalized protection plan is ready.',
+    description: 'Download Tracker Detect Pro to scan for hidden devices and protect your privacy.',
+    buttonText: 'Install & Scan Now'
   },
 
 

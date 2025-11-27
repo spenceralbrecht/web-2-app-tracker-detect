@@ -2,6 +2,7 @@ import './style.css';
 import './carousel.css';
 import './news.css';
 import './graph.css';
+import './final.css';
 import { steps } from './data.js';
 
 const app = document.querySelector('#app');
@@ -34,6 +35,8 @@ function render() {
         renderNews(step, content);
     } else if (step.type === 'graph') {
         renderGraph(step, content);
+    } else if (step.type === 'final') {
+        renderFinal(step, content);
     }
 
     container.appendChild(content);
@@ -285,12 +288,48 @@ function renderNews(step, container) {
         });
     };
 
-    const interval = setInterval(() => {
+    const nextCard = () => {
         currentIndex = (currentIndex + 1) % totalCards;
         updateCards();
-    }, 2500); // Slightly slower than carousel
+    };
 
+    const prevCard = () => {
+        currentIndex = (currentIndex - 1 + totalCards) % totalCards;
+        updateCards();
+    };
+
+    let interval = setInterval(nextCard, 2500); // Slightly slower than carousel
     window.currentNewsInterval = interval;
+
+    // Swipe Logic
+    const viewport = container.querySelector('#newsViewport');
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    viewport.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        // Pause auto-advance on touch
+        clearInterval(interval);
+    }, { passive: true });
+
+    viewport.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+        // Restart auto-advance
+        interval = setInterval(nextCard, 2500);
+        window.currentNewsInterval = interval;
+    }, { passive: true });
+
+    const handleSwipe = () => {
+        const threshold = 50; // Min distance for swipe
+        if (touchEndX < touchStartX - threshold) {
+            // Swipe Left -> Next
+            nextCard();
+        } else if (touchEndX > touchStartX + threshold) {
+            // Swipe Right -> Prev
+            prevCard();
+        }
+    };
 }
 
 function renderGraph(step, container) {
@@ -605,5 +644,22 @@ window.nextStep = function () {
         render();
     }
 };
+
+function renderFinal(step, container) {
+    // Override container styles for this step to match dark theme
+    document.body.style.backgroundColor = '#1C1B1F';
+    const app = document.querySelector('#app');
+    app.style.backgroundColor = '#1C1B1F';
+
+    container.className = 'final-container';
+    container.innerHTML = `
+    <div class="final-icon"></div>
+    <h1 class="final-title">${step.title}</h1>
+    <div class="final-subtitle">${step.subtitle}</div>
+    <p class="final-description">${step.description}</p>
+    
+    <button class="final-btn" onclick="window.open('https://play.google.com/store/apps/details?id=com.dylan.airtag.detector.pro&referrer=utm_source%3Dweb_app%26utm_medium%3DTracker%2BDetect%2BApp%26utm_campaign%3Dweb_app%26anid%3Daarki%26aclid%3D{click_id}%26cp1%3D', '_blank')">${step.buttonText}</button>
+  `;
+}
 
 render();

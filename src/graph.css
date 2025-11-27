@@ -37,6 +37,7 @@
     font-size: 24px;
     /* HeadlineSmall approx */
     font-weight: bold;
+    text-align: center;
 }
 
 .chart-card {
