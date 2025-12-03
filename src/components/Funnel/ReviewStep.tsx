@@ -28,7 +28,7 @@ export default function ReviewStep({ step, onNext }: Props) {
                     return nextIndex;
                 });
             }
-        }, 4000);
+        }, 2000);
     };
 
     const stopAutoAdvance = () => {

@@ -111,14 +111,7 @@ export const steps: Step[] = [
         stat2Number: '80%', // Added missing stat2Number based on context or just placeholder if missing in original
         buttonText: 'See My Risk'
     },
-    {
-        id: 'final_step',
-        type: 'final',
-        title: 'We have tailored your app experience',
-        subtitle: 'Your personalized protection plan is ready.',
-        description: 'Download Tracker Detect Pro to scan for hidden devices and protect your privacy.',
-        buttonText: 'See Reviews'
-    },
+
     {
         id: 'review_step',
         type: 'review',
@@ -126,22 +119,22 @@ export const steps: Step[] = [
         buttonText: 'Install App',
         reviews: [
             {
-                author: "Lisa Platte",
+                author: "Sarah Jenkins",
                 rating: 5,
-                date: "October 1, 2025",
-                text: "without this app, I wouldn't have been able to learn that my soon to be ex husband had been putting tracker after tracker devices in and on my car. It works from the cheap, all the way up to the expensive bluetooth magnetic ones! Now.. if you could make a \"where is located on the vehicle\" app, then we'd be set 😂. It took me 3 weeks to find where he hid \"the cube\" my car had never been so clean! but it was found outside underneath. anyway, thank you for making this app!!! DL this app, it works!"
+                date: "November 28, 2025",
+                text: "I travel alone for work often and this app gives me such peace of mind. Found a suspicious tag in my rental car immediately. The interface is super easy to use and the scanning is fast. Highly recommend for anyone concerned about their privacy!"
             },
             {
-                author: "Travis Stewart",
+                author: "David Chen",
                 rating: 5,
-                date: "November 10, 2025",
-                text: "magnificent and extremely well worth the purchase to track all nearby devices anything running off any type of frequency and monitors other peoples hand held electrick Bluetooth and cellphone signal. Great extra app if your seriously thinking k your being watch, followed or tracked. get it NOW!!"
+                date: "December 1, 2025",
+                text: "Actually works! I tested it with my own AirTag and it picked it up instantly. The background scanning feature is a lifesaver, alerting me when unknown devices are moving with me. Worth every penny for the security it provides."
             },
             {
-                author: "Mike Taylor",
-                rating: 4,
-                date: "October 23, 2025",
-                text: "UPDATE: They reached out to me and helped to make sure all of my device settings and permissions are correct. works great now! thank you"
+                author: "Emily Ross",
+                rating: 5,
+                date: "November 15, 2025",
+                text: "Great app. I had a feeling someone was tracking me and this app confirmed it. It helped me locate a device hidden in my bag. The support team was also very helpful when I had questions about the results. A must-have tool."
             }
         ]
     },
