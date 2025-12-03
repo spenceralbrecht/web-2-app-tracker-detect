@@ -1,6 +1,6 @@
 export interface Step {
     id: string;
-    type: 'carousel' | 'question' | 'news' | 'graph' | 'final' | 'results' | 'features' | 'intro';
+    type: 'carousel' | 'question' | 'news' | 'graph' | 'final' | 'results' | 'features' | 'intro' | 'review' | 'paywall';
     [key: string]: any;
 }
 
@@ -117,10 +117,47 @@ export const steps: Step[] = [
         title: 'We have tailored your app experience',
         subtitle: 'Your personalized protection plan is ready.',
         description: 'Download Tracker Detect Pro to scan for hidden devices and protect your privacy.',
-        buttonText: 'Install & Scan Now'
+        buttonText: 'See Reviews'
     },
-
-
+    {
+        id: 'review_step',
+        type: 'review',
+        title: 'What our users say',
+        buttonText: 'Install App',
+        reviews: [
+            {
+                author: "Lisa Platte",
+                rating: 5,
+                date: "October 1, 2025",
+                text: "without this app, I wouldn't have been able to learn that my soon to be ex husband had been putting tracker after tracker devices in and on my car. It works from the cheap, all the way up to the expensive bluetooth magnetic ones! Now.. if you could make a \"where is located on the vehicle\" app, then we'd be set 😂. It took me 3 weeks to find where he hid \"the cube\" my car had never been so clean! but it was found outside underneath. anyway, thank you for making this app!!! DL this app, it works!"
+            },
+            {
+                author: "Travis Stewart",
+                rating: 5,
+                date: "November 10, 2025",
+                text: "magnificent and extremely well worth the purchase to track all nearby devices anything running off any type of frequency and monitors other peoples hand held electrick Bluetooth and cellphone signal. Great extra app if your seriously thinking k your being watch, followed or tracked. get it NOW!!"
+            },
+            {
+                author: "Mike Taylor",
+                rating: 4,
+                date: "October 23, 2025",
+                text: "UPDATE: They reached out to me and helped to make sure all of my device settings and permissions are correct. works great now! thank you"
+            }
+        ]
+    },
+    {
+        id: 'paywall_step',
+        type: 'paywall',
+        title: 'Unlock Full Protection',
+        subtitle: 'Get unlimited access to all features and keep your privacy secure.',
+        benefits: [
+            'Real-time Tracker Detection',
+            'Unlimited Background Scans',
+            'Detailed Device Information',
+            'Priority Support 24/7'
+        ],
+        buttonText: 'Continue'
+    },
     {
         id: 'results',
         type: 'results',
