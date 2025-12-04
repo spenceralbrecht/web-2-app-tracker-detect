@@ -14,7 +14,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Anti Spy Check",
+  title: "Tracker Detect Pro",
   description: "Check if your phone is being monitored.",
 };
 

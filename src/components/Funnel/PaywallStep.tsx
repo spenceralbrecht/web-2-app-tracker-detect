@@ -51,7 +51,7 @@ export default function PaywallStep({ step, onNext }: Props) {
                         <Image
                             src="/onboarding_carousel_1.webp"
                             alt="App Screenshot"
-                            width={80}
+                            width={120}
                             height={120}
                             className="phone-image"
                         />
