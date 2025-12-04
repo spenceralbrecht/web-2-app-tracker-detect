@@ -1,9 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { loadStripe } from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
 import { Step } from './data';
-import { Check, Shield, Zap, Lock } from 'lucide-react';
+import { Check } from 'lucide-react';
+import Image from 'next/image';
+import CustomCheckoutForm from '../CustomCheckoutForm';
 
 // Replace with your actual publishable key
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_TYooMQauvdEDq54NiTphI7jx');
@@ -14,117 +17,62 @@ interface Props {
 }
 
 export default function PaywallStep({ step, onNext }: Props) {
-    const [loading, setLoading] = useState(false);
-    const [selectedPlan, setSelectedPlan] = useState<'yearly' | 'weekly'>('yearly');
-
     // Replace with your actual Stripe Price IDs
     const PRICE_IDS = {
         yearly: 'price_1SaLz1Fj5Urn3FygBiLqOGOI', // Replace with actual yearly price ID
-        weekly: 'price_1Qc...'  // Replace with actual weekly price ID
-    };
-
-    const handleSubscribe = async () => {
-        setLoading(true);
-        try {
-            const response = await fetch('/api/checkout_sessions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    priceId: selectedPlan === 'yearly' ? PRICE_IDS.yearly : PRICE_IDS.weekly
-                }),
-            });
-
-            const { url, error } = await response.json();
-
-            if (error) {
-                console.error('Error creating session:', error);
-                alert('Failed to start payment: ' + error);
-                setLoading(false);
-                return;
-            }
-
-            if (url) {
-                window.location.href = url;
-            } else {
-                console.error('No checkout URL returned');
-                alert('Failed to start payment: No checkout URL');
-                setLoading(false);
-            }
-        } catch (err) {
-            console.error('Payment error:', err);
-            alert('An unexpected error occurred.');
-            setLoading(false);
-        }
     };
 
     return (
         <div className="paywall-container">
-            <div className="header">
-                <div className="icon-wrapper">
-                    <Shield className="shield-icon" size={48} />
-                </div>
-                <h1>{step.title}</h1>
-                <p className="subtitle">{step.subtitle}</p>
-            </div>
+            <h1 className="headline">
+                Stop your phone <span className="highlight">from being spied on.</span>
+            </h1>
 
-            <div className="benefits-list">
-                {step.benefits?.map((benefit: string, index: number) => (
-                    <div key={index} className="benefit-item">
-                        <div className="check-circle">
-                            <Check size={16} color="white" />
+            <div className="content-wrapper">
+                <div className="left-column">
+                    <div className="benefits-list">
+                        <div className="benefit-item">
+                            <div className="check-circle"><Check size={14} color="white" strokeWidth={3} /></div>
+                            <span>Spying protection</span>
                         </div>
-                        <span>{benefit}</span>
+                        <div className="benefit-item">
+                            <div className="check-circle"><Check size={14} color="white" strokeWidth={3} /></div>
+                            <span>Real-time Threat Alerts</span>
+                        </div>
+                        <div className="benefit-item">
+                            <div className="check-circle"><Check size={14} color="white" strokeWidth={3} /></div>
+                            <span>24/7 Background protection</span>
+                        </div>
                     </div>
-                ))}
-            </div>
-
-            <div className="plans-container">
-                <div
-                    className={`plan-card ${selectedPlan === 'yearly' ? 'selected' : ''}`}
-                    onClick={() => setSelectedPlan('yearly')}
-                >
-                    <div className="plan-header">
-                        <span className="plan-name">Yearly Access</span>
-                        <span className="save-badge">SAVE 80%</span>
-                    </div>
-                    <div className="plan-price">
-                        <span className="currency">$</span>
-                        <span className="amount">39.99</span>
-                        <span className="period">/year</span>
-                    </div>
-                    <div className="plan-subtext">$3.33 / month</div>
-                    {selectedPlan === 'yearly' && <div className="selected-check"><Check size={14} /></div>}
                 </div>
 
-                <div
-                    className={`plan-card ${selectedPlan === 'weekly' ? 'selected' : ''}`}
-                    onClick={() => setSelectedPlan('weekly')}
-                >
-                    <div className="plan-header">
-                        <span className="plan-name">Weekly Access</span>
+                <div className="right-column">
+                    <div className="phone-mockup">
+                        <Image
+                            src="/onboarding_carousel_1.webp"
+                            alt="App Screenshot"
+                            width={80}
+                            height={120}
+                            className="phone-image"
+                        />
                     </div>
-                    <div className="plan-price">
-                        <span className="currency">$</span>
-                        <span className="amount">6.99</span>
-                        <span className="period">/week</span>
-                    </div>
-                    {selectedPlan === 'weekly' && <div className="selected-check"><Check size={14} /></div>}
                 </div>
             </div>
 
-            <div className="action-area">
-                <button
-                    className="subscribe-btn"
-                    onClick={handleSubscribe}
-                    disabled={loading}
-                >
-                    {loading ? 'Processing...' : step.buttonText}
-                </button>
-                <p className="guarantee">
-                    <Lock size={12} />
-                    Secured with SSL Encryption. Cancel anytime.
+            <div className="payment-section">
+                <div className="checkout-container">
+
+
+                    <div id="checkout">
+                        <Elements stripe={stripePromise}>
+                            <CustomCheckoutForm priceId={PRICE_IDS.yearly} />
+                        </Elements>
+                    </div>
+                </div>
+
+                <p className="guarantee">14-day money-back guarantee</p>
+                <p className="terms">
+                    <a href="#">Auto-renewal</a>. By proceeding, you affirm your agreement to our <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.
                 </p>
             </div>
 
@@ -132,65 +80,60 @@ export default function PaywallStep({ step, onNext }: Props) {
                 .paywall-container {
                     display: flex;
                     flex-direction: column;
-                    height: 100%;
-                    padding: 20px;
+                    padding: 24px;
                     color: #fff;
-                    max-width: 100%;
+                    max-width: 800px;
                     margin: 0 auto;
-                    overflow-y: auto;
+                    width: 100%;
                 }
-                .header {
-                    text-align: center;
-                    margin-bottom: 30px;
-                    margin-top: 10px;
-                }
-                .icon-wrapper {
-                    display: inline-flex;
+                .content-wrapper {
+                    display: flex;
+                    flex-direction: column;
                     align-items: center;
-                    justify-content: center;
-                    width: 80px;
-                    height: 80px;
-                    background: rgba(76, 175, 80, 0.1);
-                    border-radius: 50%;
-                    margin-bottom: 16px;
-                    border: 1px solid rgba(76, 175, 80, 0.3);
-                    box-shadow: 0 0 20px rgba(76, 175, 80, 0.2);
+                    margin-bottom: 30px;
+                    gap: 20px;
                 }
-                .shield-icon {
-                    color: #4CAF50;
+                @media(min-width: 768px) {
+                    .content-wrapper {
+                        flex-direction: row;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding: 0 40px;
+                    }
+                    .left-column {
+                        flex: 1;
+                        padding-top: 20px;
+                    }
+                    .right-column {
+                        flex: 1;
+                        display: flex;
+                        justify-content: center;
+                    }
                 }
-                h1 {
+                .headline {
                     font-size: 28px;
-                    font-weight: 800;
-                    margin-bottom: 8px;
-                    background: linear-gradient(90deg, #fff, #e0e0e0);
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
+                    font-weight: 700;
+                    line-height: 1.2;
+                    margin-bottom: 24px;
+                    color: #fff;
                 }
-                .subtitle {
-                    font-size: 16px;
-                    color: #aaa;
-                    line-height: 1.4;
+                .highlight {
+                    color: #4CAF50; /* Green */
                 }
                 .benefits-list {
                     display: flex;
                     flex-direction: column;
                     gap: 16px;
-                    margin-bottom: 30px;
                 }
                 .benefit-item {
                     display: flex;
                     align-items: center;
                     gap: 12px;
-                    background: rgba(255, 255, 255, 0.03);
-                    padding: 12px 16px;
-                    border-radius: 12px;
-                    border: 1px solid rgba(255, 255, 255, 0.05);
                 }
                 .check-circle {
                     width: 24px;
                     height: 24px;
-                    background: #4CAF50;
+                    background: #4CAF50; /* Green */
                     border-radius: 50%;
                     display: flex;
                     align-items: center;
@@ -198,117 +141,82 @@ export default function PaywallStep({ step, onNext }: Props) {
                     flex-shrink: 0;
                 }
                 .benefit-item span {
-                    font-size: 15px;
+                    font-size: 16px;
                     font-weight: 500;
                     color: #e0e0e0;
                 }
-                .plans-container {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 12px;
-                    margin-bottom: 30px;
-                }
-                .plan-card {
+                .phone-mockup {
                     position: relative;
-                    background: rgba(255, 255, 255, 0.05);
-                    border: 2px solid rgba(255, 255, 255, 0.1);
+                }
+                .phone-image {
                     border-radius: 16px;
-                    padding: 16px 20px;
-                    cursor: pointer;
-                    transition: all 0.2s ease;
+                    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
                 }
-                .plan-card.selected {
-                    background: rgba(76, 175, 80, 0.1);
-                    border-color: #4CAF50;
-                    box-shadow: 0 0 15px rgba(76, 175, 80, 0.2);
+                
+                .payment-section {
+                    background: transparent;
+                    width: 100%;
+                    max-width: 500px;
+                    margin: 0 auto;
                 }
-                .plan-header {
+
+                .checkout-container {
+                    background: transparent;
+                    border-radius: 12px;
+                    padding: 20px;
+                    color: #fff;
+                }
+                
+                .order-summary {
+                    margin-bottom: 20px;
+                    padding-bottom: 15px;
+                    border-bottom: 1px solid #eee;
+                }
+                .summary-row {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    margin-bottom: 8px;
+                    margin-bottom: 4px;
                 }
                 .plan-name {
                     font-weight: 700;
-                    font-size: 16px;
+                    font-size: 18px;
+                    color: #1a1a2e;
                 }
-                .save-badge {
+                .plan-price {
+                    font-weight: 700;
+                    font-size: 18px;
+                    color: #1a1a2e;
+                }
+                .subtext {
+                    color: #666;
+                    font-size: 14px;
+                }
+                .badge {
                     background: #4CAF50;
                     color: white;
                     font-size: 10px;
                     font-weight: 800;
-                    padding: 4px 8px;
-                    border-radius: 20px;
+                    padding: 2px 6px;
+                    border-radius: 4px;
                 }
-                .plan-price {
-                    display: flex;
-                    align-items: baseline;
-                    gap: 2px;
-                }
-                .currency {
-                    font-size: 18px;
-                    font-weight: 600;
-                }
-                .amount {
-                    font-size: 28px;
-                    font-weight: 800;
-                    color: #fff;
-                }
-                .period {
-                    font-size: 14px;
-                    color: #aaa;
-                }
-                .plan-subtext {
-                    font-size: 12px;
-                    color: #888;
-                    margin-top: 4px;
-                }
-                .selected-check {
-                    position: absolute;
-                    top: 50%;
-                    right: 16px;
-                    transform: translateY(-50%);
-                    width: 24px;
-                    height: 24px;
-                    background: #4CAF50;
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    color: white;
-                }
-                .action-area {
-                    margin-top: auto;
-                    text-align: center;
-                }
-                .subscribe-btn {
-                    width: 100%;
-                    padding: 18px;
-                    background: linear-gradient(135deg, #4CAF50, #45a049);
-                    color: white;
-                    border: none;
-                    border-radius: 16px;
-                    font-size: 18px;
-                    font-weight: 800;
-                    cursor: pointer;
-                    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
-                    transition: transform 0.1s;
-                    margin-bottom: 12px;
-                }
-                .subscribe-btn:active {
-                    transform: scale(0.98);
-                }
-                .subscribe-btn:disabled {
-                    opacity: 0.7;
-                    cursor: not-allowed;
-                }
+                
                 .guarantee {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 6px;
-                    font-size: 12px;
+                    text-align: center;
+                    color: #888;
+                    margin-top: 20px;
+                    font-size: 14px;
+                }
+                .terms {
+                    text-align: center;
                     color: #666;
+                    font-size: 12px;
+                    margin-top: 10px;
+                    line-height: 1.5;
+                }
+                .terms a {
+                    color: #888;
+                    text-decoration: underline;
                 }
             `}</style>
         </div>

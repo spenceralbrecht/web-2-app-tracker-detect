@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Step } from './data';
-import Image from 'next/image';
+import { Shield, Check } from 'lucide-react';
 
 interface Props {
     step: Step;
@@ -20,7 +20,11 @@ export default function ResultsStep({ step, onNext, answers }: Props) {
     if (answers['intent'] && answers['intent'].includes('privacy')) summaryItems.push('Enhance Privacy Awareness');
     if (answers['intent'] && answers['intent'].includes('find_mine')) summaryItems.push('Find My Device');
 
-    if (summaryItems.length === 0) summaryItems.push('Protect your device');
+    // Always add these core benefits
+    summaryItems.push('Protect your device');
+    summaryItems.push('24/7 Background protection');
+    summaryItems.push('Real-time Threat Alerts');
+    summaryItems.push('Automatic Security Updates');
 
     const handleInstall = () => {
         window.open('https://play.google.com/store/apps/details?id=com.dylan.airtag.detector.pro&referrer=utm_source%3Dweb_app%26utm_medium%3DTracker%2BDetect%2BApp%26utm_campaign%3Dweb_app%26anid%3Daarki%26aclid%3D{click_id}%26cp1%3D', '_blank');
@@ -28,11 +32,11 @@ export default function ResultsStep({ step, onNext, answers }: Props) {
 
     return (
         <div className="results-container">
-            <div className="icon-container">
-                <Image src="/ic_shield.svg" alt="Security Shield" width={80} height={80} />
+            <div className="icon-wrapper">
+                <Shield className="shield-icon" size={48} />
             </div>
 
-            <h2 className="results-title">{step.title}</h2>
+            <h1 className="results-title">{step.title}</h1>
 
             <div className="encouragement-text">
                 You have access to security tools
@@ -41,8 +45,10 @@ export default function ResultsStep({ step, onNext, answers }: Props) {
             <ul className="results-list">
                 {summaryItems.map((item, index) => (
                     <li key={index} className="result-item">
-                        <span className="check-icon">✓</span>
-                        {item}
+                        <div className="check-circle">
+                            <Check size={16} color="white" />
+                        </div>
+                        <span>{item}</span>
                     </li>
                 ))}
             </ul>
@@ -64,15 +70,26 @@ export default function ResultsStep({ step, onNext, answers }: Props) {
                     color: #fff;
                     text-align: center;
                 }
-                .icon-container {
-                    margin-bottom: 20px;
-                    filter: drop-shadow(0 0 10px rgba(76, 175, 80, 0.5));
+                .icon-wrapper {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 80px;
+                    height: 80px;
+                    background: rgba(76, 175, 80, 0.1);
+                    border-radius: 50%;
+                    margin-bottom: 16px;
+                    border: 1px solid rgba(76, 175, 80, 0.3);
+                    box-shadow: 0 0 20px rgba(76, 175, 80, 0.2);
+                }
+                .shield-icon {
+                    color: #4CAF50;
                 }
                 .results-title {
-                    font-size: 24px;
+                    font-size: 28px;
                     font-weight: 800;
                     margin-bottom: 10px;
-                    background: linear-gradient(90deg, #fff, #aaa);
+                    background: linear-gradient(90deg, #fff, #e0e0e0);
                     -webkit-background-clip: text;
                     -webkit-text-fill-color: transparent;
                 }
@@ -88,22 +105,30 @@ export default function ResultsStep({ step, onNext, answers }: Props) {
                     margin: 0 0 30px 0;
                     width: 100%;
                     max-width: 320px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
                 }
                 .result-item {
                     display: flex;
                     align-items: center;
                     gap: 12px;
-                    background: rgba(255, 255, 255, 0.05);
-                    margin-bottom: 10px;
+                    background: rgba(255, 255, 255, 0.03);
                     padding: 12px 16px;
                     border-radius: 12px;
+                    border: 1px solid rgba(255, 255, 255, 0.05);
                     font-size: 15px;
                     text-align: left;
-                    border: 1px solid rgba(255, 255, 255, 0.1);
                 }
-                .check-icon {
-                    color: #4CAF50;
-                    font-weight: bold;
+                .check-circle {
+                    width: 24px;
+                    height: 24px;
+                    background: #4CAF50;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-shrink: 0;
                 }
                 .advice-text {
                     font-size: 14px;
